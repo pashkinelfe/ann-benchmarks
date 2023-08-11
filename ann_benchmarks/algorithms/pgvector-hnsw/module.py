@@ -6,7 +6,6 @@ import psycopg
 
 from ..base.module import BaseANN
 
-
 class PGVector(BaseANN):
     def __init__(self, metric, lists):
         self._metric = metric
@@ -34,7 +33,7 @@ class PGVector(BaseANN):
         print("creating index...")
         if self._metric == "angular":
             cur.execute(
-                "CREATE INDEX ON items USING ivfflat (embedding vector_cosine_ops) WITH (lists = %d)" % self._lists
+                "CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops) WITH (m = %d, ef_construction = 64)" % self._lists
             )
         elif self._metric == "euclidean":
             cur.execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = %d)" % self._lists)
@@ -50,15 +49,21 @@ class PGVector(BaseANN):
 
     def set_query_arguments(self, probes):
         self._probes = probes
-        self._cur.execute("SET ivfflat.probes = %d" % probes)
+        self._cur.execute("SET hnsw.ef_search = %d" % probes)
         # TODO set based on available memory
-        self._cur.execute("SET work_mem = '4GB'")
+        self._cur.execute("SET work_mem = '8GB'")
         # disable parallel query execution
         self._cur.execute("SET max_parallel_workers_per_gather = 0")
 
     def query(self, v, n):
         self._cur.execute(self._query, (v, n), binary=True, prepare=True)
         return [id for id, in self._cur.fetchall()]
+
+    def get_memory_usage(self):
+        if self._cur is None:
+            return 0
+        self._cur.execute("SELECT pg_relation_size('items_embedding_idx')")
+        return self._cur.fetchone()[0] / 1024
 
     def __str__(self):
         return f"PGVector(lists={self._lists}, probes={self._probes})"

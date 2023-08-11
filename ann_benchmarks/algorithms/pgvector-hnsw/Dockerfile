@@ -2,13 +2,15 @@ FROM ann-benchmarks
 
 # https://github.com/pgvector/pgvector/blob/master/Dockerfile
 
-RUN git clone https://github.com/pgvector/pgvector /tmp/pgvector
+RUN git clone https://github.com/pgvector/pgvector.git /tmp/pgvector
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential postgresql postgresql-server-dev-all postgresql-contrib
 RUN sh -c 'echo "local all all trust" > /etc/postgresql/14/main/pg_hba.conf'
 RUN cd /tmp/pgvector && \
 	git config pull.ff only && \
+#	git checkout hnsw && \
+	git pull && \
 	make clean && \
 	make OPTFLAGS="-march=native" && \
 	make install && \

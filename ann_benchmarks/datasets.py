@@ -493,36 +493,36 @@ def dbpedia_entities_openai_1M(out_fn, n = None):
 
 
 DATASETS = {
-    "deep-image-96-angular": deep_image,
-    "fashion-mnist-784-euclidean": fashion_mnist,
-    "gist-960-euclidean": gist,
-    "glove-25-angular": lambda out_fn: glove(out_fn, 25),
-    "glove-50-angular": lambda out_fn: glove(out_fn, 50),
-    "glove-100-angular": lambda out_fn: glove(out_fn, 100),
-    "glove-200-angular": lambda out_fn: glove(out_fn, 200),
-    "mnist-784-euclidean": mnist,
-    "random-xs-20-euclidean": lambda out_fn: random_float(out_fn, 20, 10000, 100, "euclidean"),
-    "random-s-100-euclidean": lambda out_fn: random_float(out_fn, 100, 100000, 1000, "euclidean"),
-    "random-xs-20-angular": lambda out_fn: random_float(out_fn, 20, 10000, 100, "angular"),
-    "random-s-100-angular": lambda out_fn: random_float(out_fn, 100, 100000, 1000, "angular"),
-    "random-xs-16-hamming": lambda out_fn: random_bitstring(out_fn, 16, 10000, 100),
-    "random-s-128-hamming": lambda out_fn: random_bitstring(out_fn, 128, 50000, 1000),
-    "random-l-256-hamming": lambda out_fn: random_bitstring(out_fn, 256, 100000, 1000),
-    "random-s-jaccard": lambda out_fn: random_jaccard(out_fn, n=10000, size=20, universe=40),
-    "random-l-jaccard": lambda out_fn: random_jaccard(out_fn, n=100000, size=70, universe=100),
-    "sift-128-euclidean": sift,
-    "nytimes-256-angular": lambda out_fn: nytimes(out_fn, 256),
-    "nytimes-16-angular": lambda out_fn: nytimes(out_fn, 16),
-    "word2bits-800-hamming": lambda out_fn: word2bits(out_fn, "400K", "w2b_bitlevel1_size800_vocab400K"),
-    "lastfm-64-dot": lambda out_fn: lastfm(out_fn, 64),
-    "sift-256-hamming": lambda out_fn: sift_hamming(out_fn, "sift.hamming.256"),
-    "kosarak-jaccard": lambda out_fn: kosarak(out_fn),
-    "movielens1m-jaccard": movielens1m,
-    "movielens10m-jaccard": movielens10m,
-    "movielens20m-jaccard": movielens20m,
+#    "deep-image-96-angular": deep_image,
+#    "fashion-mnist-784-euclidean": fashion_mnist,
+#    "gist-960-euclidean": gist,
+#    "glove-25-angular": lambda out_fn: glove(out_fn, 25),
+#    "glove-50-angular": lambda out_fn: glove(out_fn, 50),
+    f"dbpedia-openai-angular": lambda out_fn: dbpedia_entities_openai_1M(out_fn, 1000000),
+      "glove-100-angular": lambda out_fn: glove(out_fn, 100),
+#    "glove-200-angular": lambda out_fn: glove(out_fn, 200),
+#    "mnist-784-euclidean": mnist,
+#    "random-xs-20-euclidean": lambda out_fn: random_float(out_fn, 20, 10000, 100, "euclidean"),
+#    "random-s-100-euclidean": lambda out_fn: random_float(out_fn, 100, 100000, 1000, "euclidean"),
+#    "random-xs-20-angular": lambda out_fn: random_float(out_fn, 20, 10000, 100, "angular"),
+#    "random-s-100-angular": lambda out_fn: random_float(out_fn, 100, 100000, 1000, "angular"),
+#    "random-xs-16-hamming": lambda out_fn: random_bitstring(out_fn, 16, 10000, 100),
+#    "random-s-128-hamming": lambda out_fn: random_bitstring(out_fn, 128, 50000, 1000),
+#    "random-l-256-hamming": lambda out_fn: random_bitstring(out_fn, 256, 100000, 1000),
+#    "random-s-jaccard": lambda out_fn: random_jaccard(out_fn, n=10000, size=20, universe=40),
+#    "random-l-jaccard": lambda out_fn: random_jaccard(out_fn, n=100000, size=70, universe=100),
+#    "sift-128-euclidean": sift,
+#    "nytimes-256-angular": lambda out_fn: nytimes(out_fn, 256),
+#    "nytimes-16-angular": lambda out_fn: nytimes(out_fn, 16),
+#    "word2bits-800-hamming": lambda out_fn: word2bits(out_fn, "400K", "w2b_bitlevel1_size800_vocab400K"),
+#    "lastfm-64-dot": lambda out_fn: lastfm(out_fn, 64),
+#    "sift-256-hamming": lambda out_fn: sift_hamming(out_fn, "sift.hamming.256"),
+#    "kosarak-jaccard": lambda out_fn: kosarak(out_fn),
+#    "movielens1m-jaccard": movielens1m,
+#    "movielens10m-jaccard": movielens10m,
+#    "movielens20m-jaccard": movielens20m,
 }
 
-DATASETS.update({
-    f"dbpedia-openai-{n//1000}k-angular": lambda out_fn: dbpedia_entities_openai_1M(out_fn, n)
-    for n in range(100_000, 1_100_000, 100_000)
-})
+#DATASETS.update({
+#    f"dbpedia-openai-{1000000//1000}k-angular": lambda out_fn: dbpedia_entities_openai_1M(out_fn, 1000000)
+#})
