@@ -6,19 +6,23 @@ RUN git clone https://github.com/tensorchord/pgvecto.rs.git /tmp/pgvector
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata lsb-release wget
 
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 15" > /etc/apt/sources.list.d/pgdg.list'
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential postgresql-15 postgresql-server-dev-all postgresql-contrib libpq-dev libssl-dev pkg-config gcc libreadline-dev flex bison libxml2-dev libxslt-dev libxml2-utils xsltproc zlib1g-dev ccache clang curl cargo
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends build-essential postgresql-15 postgresql-server-dev-15 postgresql-contrib-15 libpq-dev libssl-dev pkg-config gcc libreadline-dev flex bison libxml2-dev libxslt-dev libxml2-utils xsltproc zlib1g-dev ccache clang curl cargo libclang-dev
 
-RUN cd /tmp/pgvector
+WORKDIR /tmp/pgvector
 
 RUN curl -y --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-RUN apt-get update
+RUN apt-get -y install rustfmt
+#RUN apt-get update
 #RUN cargo install cargo-pgrx --git https://github.com/tensorchord/pgrx.git --rev $(cat Cargo.toml | grep "pgrx =" | awk -F'rev = "' '{print $2}' | cut -d'"' -f1)
 RUN cargo install cargo-pgrx --git https://github.com/tensorchord/pgrx.git --rev c0d11a8b78b0d707a5e9106bc4d5f66395ca9a2e --locked
-RUN export PATH=/root/.cargo/bin:$PATH
-RUN cargo pgrx init --pg15=/usr/lib/postgresql/15/bin/pg_config
+RUN export PATH=/root/.cargo/bin:$PATH && \
+    cargo pgrx init --pg15=/usr/lib/postgresql/15/bin/pg_config && \ 
+    export PATH=/root/.pgrx:$PATH
+WORKDIR /tmp/pgvector
 RUN cargo pgrx install --release
 
 RUN sh -c 'echo "local all all trust" > /etc/postgresql/15/main/pg_hba.conf'
